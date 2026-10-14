@@ -31,6 +31,8 @@ struct Preset: Identifiable, Equatable {
     night,
     Preset(id: "cinema", title: "Cinema", symbol: "film.fill", brightness: 0.35, warmth: 0.3),
   ]
+  /// Não tem valores fixos: cada tela guarda os seus em `DisplayStore.custom`.
+  static let custom = Preset(id: "custom", title: "Custom", symbol: "slider.horizontal.3", brightness: 1, warmth: 0)
 }
 
 @MainActor
@@ -156,14 +158,59 @@ final class DisplayStore: ObservableObject {
 
   func set(_ keyPath: WritableKeyPath<DisplayInfo, Double>, to value: Double, only id: CGDirectDisplayID? = nil) {
     tween?.cancel()
-    clearPreset()
+    // Com o Custom ativo, mexer nos ajustes é o jeito de editá-lo; nos outros presets, sai deles.
+    let editingCustom = activePreset == Preset.custom.id
+    if !editingCustom { clearPreset() }
     let targets = id.map { [$0] } ?? scopedIDs
     for index in displays.indices where targets.contains(displays[index].id) {
       let floor = keyPath == \.brightness ? displays[index].minBrightness : 0
       displays[index][keyPath: keyPath] = min(1, max(floor, value))
       persist(displays[index])
+      if editingCustom { remember(displays[index]) }
       apply(displays[index], hardware: keyPath == \.brightness)
     }
+  }
+
+  // MARK: Custom
+
+  /// Ajuste salvo de cada tela, pela chave do monitor: [brilho, temperatura, contraste].
+  private var custom: [String: [Double]] {
+    get { defaults.dictionary(forKey: "custom") as? [String: [Double]] ?? [:] }
+    set { defaults.set(newValue, forKey: "custom") }
+  }
+
+  var hasCustom: Bool { !custom.isEmpty }
+
+  /// Aplica o ajuste salvo de cada tela, independente da seleção. Na primeira vez, salva o que está na tela.
+  /// Uma tela que ainda não tem ajuste salvo entra com os valores atuais.
+  func applyCustom() {
+    if custom.isEmpty { saveCustom() }
+    activePreset = Preset.custom.id
+    defaults.set(Preset.custom.id, forKey: "preset")
+    let saved = custom
+    animate(to: displays.map { display in
+      guard let values = saved[display.key], values.count == 3 else {
+        remember(display)
+        return (display.id, display.brightness, display.warmth, display.contrast)
+      }
+      return (display.id, max(display.minBrightness, values[0]), values[1], values[2])
+    })
+  }
+
+  /// Guarda os ajustes atuais de todas as telas como o Custom.
+  func saveCustom() {
+    displays.forEach(remember)
+    activePreset = Preset.custom.id
+    defaults.set(Preset.custom.id, forKey: "preset")
+  }
+
+  func clearCustom() {
+    custom = [:]
+    if activePreset == Preset.custom.id { clearPreset() }
+  }
+
+  private func remember(_ display: DisplayInfo) {
+    custom[display.key] = [display.brightness, display.warmth, display.contrast]
   }
 
   func applyPreset(_ preset: Preset, toAll: Bool = false) {

@@ -80,6 +80,19 @@ struct PanelView: View {
         ForEach(Preset.all) { preset in
           PresetButton(preset: preset, active: store.activePreset == preset.id) { store.applyPreset(preset) }
         }
+        PresetButton(preset: .custom, active: store.activePreset == Preset.custom.id, action: store.applyCustom)
+          .help(store.activePreset == Preset.custom.id
+                ? "Ajuste cada tela como quiser: fica salvo no Custom"
+                : "Aplica o ajuste salvo de cada tela. Botão direito para salvar o atual")
+          .contextMenu {
+            Button("Salvar ajustes atuais no Custom", action: store.saveCustom)
+            if store.hasCustom { Button("Apagar o Custom", action: store.clearCustom) }
+          }
+      }
+      if store.activePreset == Preset.custom.id {
+        Text("Editando o Custom: escolha cada tela e ajuste, fica salvo.")
+          .font(.system(size: 10.5)).foregroundStyle(.secondary)
+          .frame(maxWidth: .infinity)
       }
     }
     .disabled(!store.enabled)
