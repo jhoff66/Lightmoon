@@ -25,7 +25,7 @@ struct PanelView: View {
 
   private var header: some View {
     HStack(spacing: 9) {
-      Image(systemName: store.enabled ? "moon.fill" : "moon")
+      Image(systemName: store.enabled ? "moon.stars.fill" : "moon")
         .font(.system(size: 19, weight: .medium))
         .foregroundStyle(store.enabled ? AnyShapeStyle(Color.moon) : AnyShapeStyle(.secondary))
       VStack(alignment: .leading, spacing: 1) {
