@@ -1,4 +1,15 @@
-# Moonlight
+<p align="center">
+  <img src="docs/icon.png" width="128" alt="Ícone do Moonlight">
+</p>
+
+<h1 align="center">Moonlight</h1>
+
+<p align="center">
+  Descanse os olhos: brilho, temperatura de cor e contraste dos monitores pela barra de menus.<br>
+  Funciona por software, até em monitor que não aceita DDC/CI.
+</p>
+
+---
 
 App de barra de menus para macOS que ajusta o brilho e a temperatura de cor de monitores externos por software.
 
