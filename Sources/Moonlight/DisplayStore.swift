@@ -55,6 +55,16 @@ final class DisplayStore: ObservableObject {
 
   private let live: Bool
   private let defaults = UserDefaults.standard
+
+  /// O app se chamava Lightmoon: na primeira abertura como Moonlight, traz os ajustes salvos com o nome antigo.
+  private static func migrateFromLightmoon() {
+    let defaults = UserDefaults.standard
+    guard !defaults.bool(forKey: "migratedFromLightmoon") else { return }
+    if let old = UserDefaults(suiteName: "br.com.jhosefer.lightmoon")?.persistentDomain(forName: "br.com.jhosefer.lightmoon") {
+      for (key, value) in old where defaults.object(forKey: key) == nil { defaults.set(value, forKey: key) }
+    }
+    defaults.set(true, forKey: "migratedFromLightmoon")
+  }
   private var base: [CGDirectDisplayID: GammaTable] = [:]
   private var tween: Task<Void, Never>?
   private var restLoop: Task<Void, Never>?
@@ -65,6 +75,7 @@ final class DisplayStore: ObservableObject {
 
   init(live: Bool = true) {
     self.live = live
+    Self.migrateFromLightmoon()
     enabled = defaults.object(forKey: "enabled") as? Bool ?? true
     activePreset = defaults.string(forKey: "preset")
     nightAuto = defaults.bool(forKey: "nightAuto")
@@ -236,7 +247,7 @@ final class DisplayStore: ObservableObject {
     do {
       if value { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
     } catch {
-      NSLog("Lightmoon: iniciar no login falhou: \(error.localizedDescription)")
+      NSLog("Moonlight: iniciar no login falhou: \(error.localizedDescription)")
     }
     launchAtLogin = SMAppService.mainApp.status == .enabled
   }

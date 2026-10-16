@@ -29,7 +29,7 @@ struct PanelView: View {
         .font(.system(size: 19, weight: .medium))
         .foregroundStyle(store.enabled ? AnyShapeStyle(Color.moon) : AnyShapeStyle(.secondary))
       VStack(alignment: .leading, spacing: 1) {
-        Text("Lightmoon").font(.system(size: 14.5, weight: .semibold))
+        Text("Moonlight").font(.system(size: 14.5, weight: .semibold))
         Text(subtitle).font(.system(size: 11)).foregroundStyle(.secondary)
       }
       Spacer()
@@ -51,7 +51,7 @@ struct PanelView: View {
       Menu {
         Button("Fazer pausa para os olhos agora") { Task { await store.rest() } }
         Divider()
-        Button("Sair do Lightmoon") { NSApplication.shared.terminate(nil) }
+        Button("Sair do Moonlight") { NSApplication.shared.terminate(nil) }
       } label: {
         Image(systemName: "ellipsis.circle").font(.system(size: 14))
       }

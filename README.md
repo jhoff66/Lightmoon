@@ -1,4 +1,4 @@
-# Lightmoon
+# Moonlight
 
 App de barra de menus para macOS que ajusta o brilho e a temperatura de cor de monitores externos por software.
 
@@ -18,7 +18,7 @@ Serve para monitores que não aceitam controle por DDC/CI, o que é comum quando
 
 ## Como funciona
 
-Nos monitores externos, o Lightmoon não conversa com o monitor. Ele guarda a tabela de cores original de cada tela (`CGGetDisplayTransferByTable`) e aplica uma versão modificada pelos ajustes (`CGSetDisplayTransferByTable`). Ao sair, a tabela original é restaurada. Na tela embutida, o brilho usa o controle de hardware do próprio macOS.
+Nos monitores externos, o Moonlight não conversa com o monitor. Ele guarda a tabela de cores original de cada tela (`CGGetDisplayTransferByTable`) e aplica uma versão modificada pelos ajustes (`CGSetDisplayTransferByTable`). Ao sair, a tabela original é restaurada. Na tela embutida, o brilho usa o controle de hardware do próprio macOS.
 
 Consequências desse método:
 
@@ -31,19 +31,19 @@ Consequências desse método:
 Cole no Terminal:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jhoff66/Lightmoon/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jhoff66/Moonlight/main/install.sh | bash
 ```
 
 O script baixa a versão mais recente, copia para Applications e abre o app.
 
 ### Pelo DMG
 
-Baixe o `Lightmoon.dmg` na página de [releases](../../releases) e arraste o app para Applications.
+Baixe o `Moonlight.dmg` na página de [releases](../../releases) e arraste o app para Applications.
 
 O app não é notarizado pela Apple, então o macOS barra a primeira abertura de um DMG baixado pelo navegador, às vezes dizendo que o app "está danificado". Ele não está. Para liberar, cole no Terminal:
 
 ```sh
-xattr -cr /Applications/Lightmoon.app
+xattr -cr /Applications/Moonlight.app
 ```
 
 Requer macOS 14 ou mais recente. Roda em Apple Silicon e em Intel.
@@ -53,9 +53,9 @@ Requer macOS 14 ou mais recente. Roda em Apple Silicon e em Intel.
 Precisa só das Command Line Tools da Apple (`xcode-select --install`).
 
 ```sh
-./build.sh           # gera o Lightmoon.app
+./build.sh           # gera o Moonlight.app
 ./build.sh install   # também copia para /Applications e reabre
-./build.sh dmg       # também gera o Lightmoon.dmg
+./build.sh dmg       # também gera o Moonlight.dmg
 ```
 
 ## Licença

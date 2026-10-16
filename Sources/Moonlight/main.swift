@@ -2,7 +2,7 @@ import AppKit
 import ServiceManagement
 import SwiftUI
 
-struct LightmoonApp: App {
+struct MoonlightApp: App {
   @StateObject private var store = DisplayStore()
 
   var body: some Scene {
@@ -61,5 +61,5 @@ if let flag = arguments.firstIndex(of: "--snapshot"), arguments.count > flag + 1
           "| brilho hw:", builtin ? (BuiltinBrightness.get(id).map { String(format: "%.2f", $0) } ?? "indisponível") : "n/a")
   }
 } else {
-  LightmoonApp.main()
+  MoonlightApp.main()
 }
